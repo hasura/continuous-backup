@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  aws.region: "example: us-east-1"
+  aws.s3.prefix: "s3://<your-hasura-project-name>/pgbackup"
+metadata:
+  labels:
+      app: hasura-backup
+  name: hasura-backup
+  namespace: hasura

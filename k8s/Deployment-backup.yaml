@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+  namespace: hasura
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: postgres.user
+              name: postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgres.password
+              name: postgres
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              key: aws.region
+              name: hasura-backup
+        - name: WALE_S3_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              key: aws.s3.prefix
+              name: hasura-backup
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: hasura-backup
+              key: aws.access.key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: hasura-backup
+              key: aws.secret.access.key
+        image: hasura/postgres-wal-e:9.6.1-r1
+        imagePullPolicy: IfNotPresent
+        name: postgres
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      volumes:
+      - hostPath:
+          path: /home/core/persist/hasura/postgres
+        name: data
