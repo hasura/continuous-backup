@@ -21,10 +21,7 @@ if [ "$1" = 'backup' ]; then
 fi
 
 if [ "$1" = 'recover' ]; then
-  echo "Recover command"
   . /recover.sh
-  echo "Starting server Postgres"
-  . /docker-entrypoint.sh "postgres"
 fi
 
 echo "Executing: $@"

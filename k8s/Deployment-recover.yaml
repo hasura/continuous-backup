@@ -47,7 +47,8 @@ spec:
             secretKeyRef:
               name: hasura-backup
               key: aws.secret.access.key
-        args: ['recover']
+        args:
+          - recover
         image: hasura/postgres-wal-e:9.6.1-r1
         imagePullPolicy: IfNotPresent
         name: postgres
@@ -62,5 +63,5 @@ spec:
       volumes:
       - hostPath:
           path: /home/core/persist/hasura/postgres
-        #path: /data/persist/hasura/postgres
+          # path: /data/persist/hasura/postgres
         name: data

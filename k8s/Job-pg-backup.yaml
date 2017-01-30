@@ -16,6 +16,10 @@ spec:
       - image: hasura/postgres-wal-e:9.6.1-r1
         name: pg-backup
         env:
+          - name: PGHOST
+            value: "postgres.hasura"
+          - name: PGPORT
+            value: "5432"
           - name: PGUSER
             valueFrom:
               secretKeyRef:
@@ -26,16 +30,16 @@ spec:
               secretKeyRef:
                 key: postgres.password
                 name: postgres
-        - name: AWS_REGION
-          valueFrom:
-            configMapKeyRef:
-              key: aws.region
-              name: hasura-backup
-        - name: WALE_S3_PREFIX
-          valueFrom:
-            configMapKeyRef:
-              key: aws.s3.prefix
-              name: hasura-backup
+          - name: AWS_REGION
+            valueFrom:
+              configMapKeyRef:
+                key: aws.region
+                name: hasura-backup
+          - name: WALE_S3_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                key: aws.s3.prefix
+                name: hasura-backup
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
@@ -46,7 +50,8 @@ spec:
               secretKeyRef:
                 name: hasura-backup
                 key: aws.secret.access.key
-        args: ['backup']
+        args:
+          - backup
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: data

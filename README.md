@@ -63,10 +63,9 @@ control. Or you risk leak of secret data!!
   Hasura project cluster you are configuring the backup for.
 
 * Then run:
-
-```shell
-$ ./configure_backup.sh
-```
+  ```shell
+  $ ./configure_backup.sh
+  ```
 
 ### More options
 
@@ -78,14 +77,17 @@ following script to do it.
 configured `kubectl` correctly.
 
 * Then run:
-```shell
-$ ./undo_backup.sh
-```
+  ```shell
+  $ ./stop_backup.sh
+  ```
 
-**NOTE**: This script is not guaranteed to have removed backup configuration
-and restarted Postgres. You might need to manually intervene.
+**NOTE**: This script is not guaranteed to have rolled back the postgres
+deployment correctly. You might need to manually intervene.
+
 
 # Recover from backup on a Hasura project
+
+## Setup for the recovery
 
 * Download this repository.
 
@@ -104,6 +106,8 @@ and restarted Postgres. You might need to manually intervene.
   not** put the `k8s/Secrets.yaml` and `k8s/ConfigMap.yaml` files in version
 control. Or you risk leak of secret data!!
 
+## Configure the recovery to start
+
 * Once the secrets and configmap is configured, we can run the script to
   configure our cluster.
 
@@ -111,8 +115,82 @@ control. Or you risk leak of secret data!!
   Hasura project cluster you are configuring the backup for.
 
 * Then run:
+  ```shell
+  $ ./recovery.sh
+  ```
+
+## Checking status
+
+The recovery process will take some time depending on your data and
+size and number of backups.
+
+You can see the status by `tail`-ing the log of the postgres pod:
 
 ```shell
-$ ./recovery.sh
+$ kubectl logs <postgres-pod-name> -n hasura
 ```
 
+Alternatively, you can also check for a `recovery.done` file in the `PGDATA`
+directory.
+
+
+## Post recovery steps
+
+**NOTE**: If this step is not completed, you won't be able to use the project.
+
+When the database is recovered from the backup, it is a verbatim copy of the
+target database. Hence everything, including postgres and project admin
+paswords, will be as it is in the old project.
+
+As a result, after the recovery is complete, we need to change the passwords of
+the current project to that of the older project.
+
+Follow the steps to achieve that:
+
+* Make sure kubectl is pointing to old project:
+  ```shell
+    $ kubectl config set current-context <old-hasura-project>
+  ```
+
+* Then run:
+  ```shell
+    $ kubectl get secret postgres -n hasura -o yaml
+  ```
+
+  The value in postgres.password is the postgres admin password.
+  Copy the value in the postgres.password field and keep it.
+
+* Again:
+  ```shell
+    $ kubectl get secret auth -n hasura
+  ```
+
+  The value in django.sapass is the project admin password.
+  Copy the value in the django.sapass field and keep it.
+
+* Now switch to new project:
+  ```shell
+    $ kubectl config set current-context <new-hasura-project>
+  ```
+
+* Then run:
+  ```shell
+    $ kubectl edit secret postgres -n hasura
+  ```
+  In the postgres.password field, paste the value from previous step.
+
+* And:
+  ```shell
+    $ kubectl edit secret auth -n hasura
+  ```
+  In the django.sapass field, paste the value from previous step.
+
+* Now restart auth and data pods:
+
+  ```shell
+    $ kubectl delete pod <auth-pod-name> -n hasura
+    $ kubectl delete pod <data-pod-name> -n hasura
+  ```
+
+Now you should be able to login to your new project with old project's
+credentials.
