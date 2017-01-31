@@ -14,7 +14,7 @@ coming soon.
 
 ## Overview
 
-The way Hasura backup work is:
+The way Hasura backup works is:
 
 * You setup a S3 bucket, Azure blob storage, GCP container etc. - where you want
   to save your backups.
@@ -56,7 +56,7 @@ Further reading:
   not** put the `k8s/Secrets.yaml` and `k8s/ConfigMap.yaml` files in version
 control. Or you risk leak of secret data!!
 
-* Once the secrets and configmap is configured, we can run the script to
+* Once the secrets and configmap are configured, we can run the script to
   configure our cluster.
 
 * Make sure you have `kubectl` installed and the `current-context` is set to
@@ -108,7 +108,7 @@ control. Or you risk leak of secret data!!
 
 ## Configure the recovery to start
 
-* Once the secrets and configmap is configured, we can run the script to
+* Once the secrets and configmap are configured, we can run the script to
   configure our cluster.
 
 * Make sure you have `kubectl` installed and the `current-context` is set to
@@ -138,8 +138,8 @@ directory.
 
 **NOTE**: If this step is not completed, you won't be able to use the project.
 
-When the database is recovered from the backup, it is a verbatim copy of the
-target database. Hence everything, including postgres and project admin
+When the database is recovered from a backup, it is an exact replica of the
+source database. Hence everything, including postgres and project admin
 paswords, will be as it is in the old project.
 
 As a result, after the recovery is complete, we need to change the passwords of
