@@ -124,7 +124,7 @@ control. Or you risk leak of secret data!!
 The recovery process will take some time depending on your data and
 size and number of backups.
 
-You can see the status by `tail`-ing the log of the postgres pod:
+You can see the status by looking at the logs of the postgres pod:
 
 ```shell
 $ kubectl logs <postgres-pod-name> -n hasura
@@ -156,7 +156,6 @@ Follow the steps to achieve that:
   ```shell
     $ kubectl get secret postgres -n hasura -o yaml
   ```
-
   The value in postgres.password is the postgres admin password.
   Copy the value in the postgres.password field and keep it.
 
@@ -164,7 +163,6 @@ Follow the steps to achieve that:
   ```shell
     $ kubectl get secret auth -n hasura
   ```
-
   The value in django.sapass is the project admin password.
   Copy the value in the django.sapass field and keep it.
 

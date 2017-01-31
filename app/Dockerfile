@@ -28,6 +28,9 @@ RUN chmod +x /backup.sh
 COPY recover.sh /recover.sh
 RUN chmod +x /recover.sh
 
+COPY cronjob.sh /cronjob.sh
+RUN chmod +x /cronjob.sh
+
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

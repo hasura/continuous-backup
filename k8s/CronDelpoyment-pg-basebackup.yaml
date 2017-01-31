@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: cron-pg-basebackup
+  name: cron-pg-basebackup
+  namespace: hasura
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cron-pg-basebackup
+  template:
+    metadata:
+      labels:
+        app: cron-pg-basebackup
+      name: cron-pg-basebackup
+    spec:
+      containers:
+      - image: hasura/postgres-wal-e:9.6.1-r1
+        name: cron-pg-basebackup
+        env:
+          - name: PGUSER
+            valueFrom:
+              secretKeyRef:
+                key: postgres.user
+                name: postgres
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: postgres.password
+                name: postgres
+          - name: AWS_REGION
+            valueFrom:
+              configMapKeyRef:
+                key: aws.region
+                name: hasura-backup
+          - name: WALE_S3_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                key: aws.s3.prefix
+                name: hasura-backup
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: hasura-backup
+                key: aws.access.key
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: hasura-backup
+                key: aws.secret.access.key
+          - name: SCHEDULE
+            value: "0 0 * * *"
+        args:
+          - /cronjob.sh
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: data
+      volumes:
+        - hostPath:
+            path: /home/core/persist/hasura/postgres
+          name: data
