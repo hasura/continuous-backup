@@ -51,9 +51,9 @@ spec:
                 name: hasura-backup
                 key: aws.secret.access.key
           - name: RECOVERY_TARGET_TIME
-            value: '' # '2017-02-01 19:58:55'
-        cmd:
-          - /recovery.sh
+            value: '2017-02-16 09:55:00'
+        command:
+          - /recover.sh
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: data
