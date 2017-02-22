@@ -47,7 +47,7 @@ spec:
             secretKeyRef:
               name: hasura-backup
               key: aws.secret.access.key
-        image: hasura/postgres-wal-e:9.6.1-r1
+        image: hasura/postgres-wal-e:9.6.1-r1-0.2
         imagePullPolicy: IfNotPresent
         name: postgres
         ports:

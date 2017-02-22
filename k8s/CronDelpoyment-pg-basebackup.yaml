@@ -17,7 +17,7 @@ spec:
       name: cron-pg-basebackup
     spec:
       containers:
-      - image: hasura/postgres-wal-e:9.6.1-r1
+      - image: hasura/postgres-wal-e:9.6.1-r1-0.2
         name: cron-pg-basebackup
         env:
           - name: PGUSER
