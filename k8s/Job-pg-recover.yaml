@@ -51,7 +51,8 @@ spec:
                 name: hasura-backup
                 key: aws.secret.access.key
           - name: RECOVERY_TARGET_TIME
-            value: '2017-02-16 09:55:00'
+            #value: ''
+            value: '2017-02-15 09:55:00'
         command:
           - /recover.sh
         volumeMounts:

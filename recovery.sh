@@ -6,7 +6,10 @@ echo "Setting up configuration to start recovery"
 
 kubectl create -f k8s/ConfigMap.yaml
 kubectl create -f k8s/Secrets.yaml
-kubectl create -f k8s/Job-pg-recover.yaml
+#kubectl create -f k8s/vivace59.cm.yaml
+#kubectl create -f k8s/vivace59.secrets.yaml
+#kubectl create -f k8s/Job-pg-recover.yaml
+kubectl replace -f k8s/Deployment-recover.yaml
 
 echo ""
 echo "*** STATUS ***"
