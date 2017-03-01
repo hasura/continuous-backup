@@ -30,6 +30,8 @@ spec:
               secretKeyRef:
                 key: postgres.password
                 name: postgres
+          - name: PGHOST
+            value: postgres.hasura
           - name: AWS_REGION
             valueFrom:
               configMapKeyRef:

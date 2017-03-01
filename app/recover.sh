@@ -23,6 +23,10 @@ cp $PGDATA/postgresql.conf /postgresql.conf
 cp $PGDATA/pg_hba.conf /pg_hba.conf
 cp $PGDATA/pg_ident.conf /pg_ident.conf
 
+#echo "sleeping..."
+#sleep 300
+#echo "slept for a long time..."
+
 echo "Hasura Recovery System: Obliterating current data directory ${PGDATA}/*"
 gosu postgres rm -r ${PGDATA}/*
 
