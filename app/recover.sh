@@ -11,20 +11,13 @@ echo "$AWS_REGION"            > /etc/wal-e.d/env/AWS_REGION
 
 chown -R postgres:postgres /etc/wal-e.d/*
 
-#if [[ ! -f $PGDATA/PG_VERSION ]]; then
-#  echo "Cannot find an initialized Postgres directory."
-#  echo "Make sure you intitialized a Postgres instance first and then run "
-#  echo "the recovery"
-#  exit 1;
-#fi
-
 # backup postgresql.conf
 cp $PGDATA/postgresql.conf /postgresql.conf
 cp $PGDATA/pg_hba.conf /pg_hba.conf
 cp $PGDATA/pg_ident.conf /pg_ident.conf
 
 #echo "sleeping..."
-#sleep 300
+#sleep 30
 #echo "slept for a long time..."
 
 echo "Hasura Recovery System: Obliterating current data directory ${PGDATA}/*"
